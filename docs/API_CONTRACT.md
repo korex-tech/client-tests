@@ -92,9 +92,36 @@ buy/sell-share semantics (BACK ≈ buy the outcome token, LAY ≈ sell it).
 | `/orders/cancel`  | `cancelOrders`                              | CLOB `cancel`                                |
 | `/orders/open`    | `listCurrentOrders`                         | CLOB open orders                             |
 
+## Backend implementation notes (per platform)
+
+See `docs/SCOPING_AND_PLAN.md` for the full API/cost/strategy analysis. Key
+points the backend must honour:
+
+**Polymarket** (target **CLOB v2 / the unified `Polymarket/ts-sdk` (or `py-sdk`)** —
+the legacy `@polymarket/clob-client` / `py-clob-client` were retired with the
+~Apr 2026 v2 cutover and no longer work against production):
+- Discovery: Gamma API (`gamma-api.polymarket.com`, public). The market object
+  exposes reward params (`rewardsMinSize`, `rewardsMaxSpread`, `clobRewards[]`)
+  used by a market-making strategy.
+- Trading: CLOB (`clob.polymarket.com`). **L1** EIP-712 sig (`ClobAuthDomain`,
+  chainId 137) → derive API creds; **L2** per-request HMAC-SHA256 in 5 headers
+  (`POLY_ADDRESS/SIGNATURE/TIMESTAMP/API_KEY/PASSPHRASE`). Signature type is
+  typically `GNOSIS_SAFE = 2`. Resting orders need a `postHeartbeat` (~10s) or
+  they are mass-cancelled. **All signing is server-side — keys never reach the
+  browser.**
+- Collateral is mid-migration from bridged **USDC.e** to native **USDC / pUSD** —
+  read the active token rather than hard-coding it. Trading is gasless (relayer
+  sponsors Polygon gas). Test on Amoy (chain 80002) first.
+
+**Betfair**: cert (non-interactive) login → session token in `X-Authentication`
++ app key in `X-Application`; extend with `keepAlive` (~12 h session). The free
+"Delayed" app key conflates data to ~3 min, so live trading needs the paid live
+key (£299–£499 — confirm current fee).
+
 ## Future: real-time prices
 
 Both platforms offer streaming (Betfair Exchange Stream API, Polymarket
-WebSocket). A follow-up can add a WebSocket bridge on the backend and have the
-client subscribe instead of polling `/markets/get`. The UI already isolates the
-book in `MarketView`, so only that component needs to change.
+WebSocket — `wss://ws-subscriptions-clob.polymarket.com/ws/market`). A follow-up
+can add a WebSocket bridge on the backend and have the client subscribe instead
+of polling `/markets/get`. The UI already isolates the book in `MarketView`, so
+only that component needs to change.

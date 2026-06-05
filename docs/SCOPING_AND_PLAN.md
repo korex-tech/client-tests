@@ -6,6 +6,8 @@
 
 **Build order (decided):** Polymarket first, then Betfair.
 
+**Jurisdiction (decided):** UK / Ireland — Betfair available; Polymarket *international* venue. (Verify Polymarket UK access before funding — see §7.)
+
 ---
 
 ## 1. Executive summary — the honest answer
@@ -117,14 +119,14 @@ For a **small, software-driven operation**, the edges fall into three tiers:
 - **Polymarket:** International platform (deep liquidity, USDC, UMA-resolved) is **geoblocked to US IPs** under a 2022 CFTC settlement ($1.4M). A **separate CFTC-regulated "Polymarket US" (QCX LLC) launched 3 Dec 2025** — *different order book*, mandatory KYC (ID/SSN), iOS-first, with 11+ state cease-and-desists and a Minnesota ban (challenged). "No KYC, no API access." Automated/API trading is first-party-tooled (`Polymarket/agents`).
 - **Betfair:** Unavailable in the US (bar narrow racing carve-outs) and banned in several countries (France, Germany, Greece, Portugal, Turkey, China, Japan…); available UK/IE/AU/much of EU. API/bot trading explicitly permitted. Exchange winners are **not** "gubbed" (that's a sportsbook risk) — the Expert Fee is the equivalent tax.
 
-**⟶ Open question that gates Phase 1+: which jurisdiction are we operating from, and therefore which Polymarket venue (international vs US) and is Betfair even available to us?**
+**⟶ Decided: operating from UK / Ireland.** → Betfair Exchange is fully available; we target Polymarket's **international** order book (USDC, UMA-resolved). The US-venue complications (separate book, KYC) do **not** apply. ⚠️ *One confirm-before-capital item: verify Polymarket's specific UK availability — the UK Gambling Commission / FCA stance on prediction markets has been restrictive at times; confirm access from a UK context before funding.*
 
 ---
 
 ## 8. Recommended build — phased plan (money-first, Polymarket first)
 
-### Phase 0 — Foundations & legal gate *(no capital at risk)*
-- Resolve the **jurisdiction question** (§7) — determines venue + whether Betfair is in scope at all.
+### Phase 0 — Foundations *(no capital at risk)*
+- Jurisdiction resolved (UK/IE). One pre-funding check: **confirm Polymarket UK access** (§7).
 - Stand up the **backend skeleton** behind the existing `ExchangeClient` contract; implement the **Polymarket read path** against live data: Gamma `/markets` + CLOB `/book`/`/price` + market WebSocket. No auth needed.
 - **Validate the normalised shapes** against real Gamma/CLOB responses; extend them for `conditionId`/token IDs, tick size, and reward params (`rewardsMinSize`/`rewardsMaxSpread`).
 - Update SDK target to **clob-client-v2 / unified SDK**; fix `API_CONTRACT.md`.
@@ -164,7 +166,7 @@ For a **small, software-driven operation**, the edges fall into three tiers:
 
 ## 9. Key risks & open questions
 
-1. **Jurisdiction (blocker):** which Polymarket venue; is Betfair available? — *needed before Phase 1.*
+1. **Jurisdiction:** ✅ resolved — UK/IE (Betfair available; Polymarket international). *Remaining: confirm Polymarket UK access before funding (§7).*
 2. **Capital:** target deployable size? (drives market selection & reward-pool share.)
 3. **UMA oracle resolution risk** on Polymarket (documented $7M misresolution).
 4. **Time-sensitivity:** reward pools, fee schedule, and the USDC.e→USDC/pUSD migration are all in flux — the bot must read params live, not hard-code them.

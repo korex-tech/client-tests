@@ -21,9 +21,19 @@ export function formatMoney(amount, currency) {
     return Number(amount).toFixed(2) + ' ' + (currency || '');
 }
 
-// Estimate the potential profit/liability of a bet for display in the ticket.
-// BACK at decimal odds: profit = size * (price - 1).
-// BACK on probability markets: shares = size / price, profit = shares - size.
+// Estimate the side-appropriate figure shown in the order ticket:
+//   BACK -> potential profit if the selection wins
+//   LAY  -> liability (the amount put at risk to win the backer's stake)
+//
+// DECIMAL_ODDS (Betfair): stake s at odds p.
+//   BACK profit    = s * (p - 1)
+//   LAY  liability = s * (p - 1)   <- risk (p-1) per 1 staked to win s
+//
+// PROBABILITY (Polymarket): stake s (in USDC) at price p (0..1).
+//   BACK profit    = s/p - s       (buy s/p shares, each winning share pays 1)
+//   LAY  liability = s * (1 - p)    (approx; sell/collateral semantics to be
+//                                    confirmed against the backend — see
+//                                    docs/SCOPING_AND_PLAN.md gap list)
 export function estimateProfit(side, price, size, priceType) {
     const p = Number(price);
     const s = Number(size);
@@ -31,12 +41,8 @@ export function estimateProfit(side, price, size, priceType) {
         return 0;
     }
     if (priceType === 'PROBABILITY') {
-        // Shares bought for stake s at price p; each winning share pays 1.
-        return side === 'BACK' ? (s / p) - s : s;
+        return side === 'BACK' ? (s / p) - s : s * (1 - p);
     }
-    if (side === 'BACK') {
-        return s * (p - 1);
-    }
-    // LAY: the stake represents backer's stake; liability shown elsewhere.
-    return s;
+    // DECIMAL_ODDS: profit on a back and liability on a lay are both s * (p - 1).
+    return s * (p - 1);
 }
