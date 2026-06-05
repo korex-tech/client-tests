@@ -7,6 +7,7 @@ import { Routes, Route } from 'react-router-dom';
 
 import Main from './Main';
 import CompleteDeposit from './CompleteDeposit';
+import ExchangeDashboard from './exchange/ExchangeDashboard';
 
 
 
@@ -37,6 +38,7 @@ const App = (props) => {
                 <Route path="/">
                     <Route index element={ MainRoute() } />
                     <Route path="complete" element={ CompleteDepositRoute() } />
+                    <Route path="exchange" element={ <ExchangeDashboard /> } />
                 </Route>
             </Routes>
         </div>
