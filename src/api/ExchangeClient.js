@@ -140,10 +140,22 @@ function ExchangeClient(options = {}) {
         sessionToken = token;
     }
 
+    // URL for the backend SSE order-book stream, or null when streaming isn't
+    // available (mock mode, or a platform without a stream yet). The frontend
+    // subscribes with EventSource and falls back to polling when this is null.
+    function getStreamUrl(platform, marketId) {
+        if (USE_MOCK || platform !== 'polymarket' || !marketId) {
+            return null;
+        }
+        const qs = new URLSearchParams({ platform, marketId });
+        return `${apiBase}/stream?${qs.toString()}`;
+    }
+
     return {
         isMock: () => USE_MOCK,
         getApiBase: () => apiBase,
         setSessionToken,
+        getStreamUrl,
 
         listMarkets,
         getMarket,

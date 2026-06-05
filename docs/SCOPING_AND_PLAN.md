@@ -131,7 +131,7 @@ For a **small, software-driven operation**, the edges fall into three tiers:
 - ✅ **Normalisation** built and unit-tested against fixtures (Gamma JSON-string fields parsed; BACK=asks asc / LAY=bids desc; `conditionId`/token IDs + reward params carried through). 10 backend tests pass offline.
 - ✅ **Frontend wired** for live mode (`REACT_APP_EXCHANGE_API` switch + CRA dev proxy; Polymarket tab default; graceful empty/unavailable states).
 - ⏳ **Live validation against real Gamma/CLOB** — blocked in this sandbox by the network allowlist (`Host not in allowlist`); run the backend where Polymarket hosts are reachable to confirm shapes against production. *(Mapping is fixture-verified; minor field tweaks may be needed against live data.)*
-- ⏳ Polymarket **WebSocket** bridge for live book updates — deferred to the Phase 0→1 boundary.
+- ✅ Polymarket **WebSocket → SSE bridge** for live book updates: backend connects to the CLOB market channel, applies `book`/`price_change` deltas, and pushes per-runner ladder updates over SSE (`GET /api/exchange/stream`); frontend `MarketView` subscribes via `EventSource` (falls back to polling). Delta logic + WS client (fake socket) + SSE endpoint are tested offline; live socket pending allowlisted network.
 - ✅ SDK target updated to **clob-client-v2 / unified SDK** in `API_CONTRACT.md`.
 - *Deliverable:* read-only Polymarket dashboard driven by the backend (pending live-network confirmation).
 

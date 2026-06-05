@@ -55,15 +55,27 @@ server/
     polymarket/
       client.js            # Gamma + CLOB HTTP calls (read path)
       normalize.js         # pure response -> unified-shape mappers
+      stream.js            # pure order-book delta state machine
+      marketStream.js      # CLOB market WebSocket client (injectable socket)
   test/
     normalize.test.js      # unit tests for the mappers
     handlers.test.js       # endpoint tests with a fixture client (no network)
+    stream.test.js         # book deltas + WebSocket client (fake socket)
+    streamEndpoint.test.js # SSE endpoint test (injected fake stream)
   fixtures/                # sample Gamma market + CLOB book responses
 ```
 
+## Live order-book stream (SSE)
+
+`GET /api/exchange/stream?platform=polymarket&marketId=<id>` opens a
+Server-Sent Events stream. The backend subscribes to the market's outcome
+tokens on the Polymarket CLOB WebSocket, applies `book`/`price_change` deltas,
+and emits `event: book` frames carrying `{ runnerId, toBack, toLay }`. The
+frontend `MarketView` consumes this via `EventSource` and patches the book in
+place (falling back to REST polling when streaming is unavailable).
+
 ## Next (Phase 1+)
 
-- Polymarket WebSocket bridge for live book updates (replace polling).
 - Polymarket trading: server-side L1 EIP-712 → L2 HMAC signing, order
   placement/cancel, balances. **Keys live only here, never in the browser.**
 - Betfair adapter: cert login, JSON-RPC operations, Stream API.

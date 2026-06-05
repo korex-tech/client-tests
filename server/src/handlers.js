@@ -97,4 +97,17 @@ async function findMarketByPrefixedId(client, marketId) {
     return raw.find((m) => `pm-${m.conditionId || m.id}` === marketId);
 }
 
-export { createHandlers };
+// Resolve a market id to its outcome tokens so the stream can subscribe.
+// Returns [{ runnerId, tokenId, name }] or null if the market isn't found.
+async function resolveMarketTokens(client, marketId) {
+    const raw = await findMarketByPrefixedId(client, marketId);
+    if (!raw) {
+        return null;
+    }
+    const market = normalizeGammaMarket(raw);
+    return market.runners
+        .filter((r) => r.tokenId)
+        .map((r) => ({ runnerId: r.id, tokenId: r.tokenId, name: r.name }));
+}
+
+export { createHandlers, resolveMarketTokens };

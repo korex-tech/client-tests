@@ -26,6 +26,38 @@ const MarketView = ({ client, platform, marketId, onOrderPlaced }) => {
         load();
     }, [ load ]);
 
+    // Live order-book updates via backend SSE (no-op in mock mode / when the
+    // platform has no stream, or where EventSource is unavailable e.g. tests).
+    useEffect(() => {
+        const url = client.getStreamUrl && client.getStreamUrl(platform, marketId);
+        if (!url || typeof window === 'undefined' || !window.EventSource) {
+            return undefined;
+        }
+        const es = new window.EventSource(url);
+        es.addEventListener('book', (e) => {
+            let upd;
+            try {
+                upd = JSON.parse(e.data);
+            }
+            catch (err) {
+                return;
+            }
+            // Patch just the updated runner's ladders, leaving the rest intact.
+            setMarket((m) => {
+                if (!m) {
+                    return m;
+                }
+                const runners = m.runners.map((r) => (
+                    r.id === upd.runnerId
+                        ? { ...r, toBack: upd.toBack, toLay: upd.toLay }
+                        : r
+                ));
+                return { ...m, runners };
+            });
+        });
+        return () => es.close();
+    }, [ client, platform, marketId ]);
+
     if (loading) {
         return <Segment basic><Loader active inline="centered" /></Segment>;
     }
