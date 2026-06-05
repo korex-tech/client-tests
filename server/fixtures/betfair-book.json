@@ -1,0 +1,35 @@
+[
+    {
+        "marketId": "1.234567890",
+        "status": "OPEN",
+        "runners": [
+            {
+                "selectionId": 47973,
+                "status": "ACTIVE",
+                "lastPriceTraded": 2.18,
+                "ex": {
+                    "availableToBack": [ { "price": 2.18, "size": 540 }, { "price": 2.16, "size": 1200 } ],
+                    "availableToLay": [ { "price": 2.2, "size": 430 }, { "price": 2.22, "size": 980 } ]
+                }
+            },
+            {
+                "selectionId": 58805,
+                "status": "ACTIVE",
+                "lastPriceTraded": 3.65,
+                "ex": {
+                    "availableToBack": [ { "price": 3.65, "size": 320 }, { "price": 3.6, "size": 760 } ],
+                    "availableToLay": [ { "price": 3.7, "size": 280 }, { "price": 3.75, "size": 610 } ]
+                }
+            },
+            {
+                "selectionId": 58806,
+                "status": "ACTIVE",
+                "lastPriceTraded": 3.4,
+                "ex": {
+                    "availableToBack": [ { "price": 3.4, "size": 410 }, { "price": 3.35, "size": 890 } ],
+                    "availableToLay": [ { "price": 3.45, "size": 350 }, { "price": 3.5, "size": 720 } ]
+                }
+            }
+        ]
+    }
+]

@@ -1,0 +1,25 @@
+[
+    {
+        "marketId": "1.234567890",
+        "marketName": "Match Odds",
+        "marketStartTime": "2026-08-15T14:00:00Z",
+        "competition": { "id": "10932509", "name": "English Premier League" },
+        "event": { "id": "33887171", "name": "Arsenal v Chelsea", "countryCode": "GB", "timezone": "GMT" },
+        "runners": [
+            { "selectionId": 47973, "runnerName": "Arsenal", "sortPriority": 1 },
+            { "selectionId": 58805, "runnerName": "Chelsea", "sortPriority": 2 },
+            { "selectionId": 58806, "runnerName": "The Draw", "sortPriority": 3 }
+        ]
+    },
+    {
+        "marketId": "1.987654321",
+        "marketName": "Match Odds",
+        "marketStartTime": "2026-07-05T12:30:00Z",
+        "competition": { "id": "12801", "name": "ATP" },
+        "event": { "id": "33990011", "name": "Djokovic v Alcaraz", "countryCode": "GB", "timezone": "GMT" },
+        "runners": [
+            { "selectionId": 11001, "runnerName": "N. Djokovic", "sortPriority": 1 },
+            { "selectionId": 11002, "runnerName": "C. Alcaraz", "sortPriority": 2 }
+        ]
+    }
+]

@@ -4,9 +4,14 @@ A dependency-free Node backend implementing the unified exchange contract in
 [`docs/API_CONTRACT.md`](../docs/API_CONTRACT.md). It proxies the platform APIs
 and normalises their responses into the shapes the React frontend expects.
 
-**Phase 0 scope:** the **Polymarket read path** only —
-`markets/list` and `markets/get` against the public Gamma + CLOB APIs.
-Balances, orders, and Betfair return `NOT_IMPLEMENTED` until later phases.
+**Phase 0 scope:** the **read path for both providers** — `markets/list` and
+`markets/get` for **Polymarket** (public Gamma + CLOB) and **Betfair**
+(JSON-RPC `listMarketCatalogue` + `listMarketBook`, joined into back/lay
+ladders). Balances and orders return `NOT_IMPLEMENTED` until the trading phases.
+
+Betfair needs server-side credentials via env (`BETFAIR_APP_KEY`,
+`BETFAIR_SESSION_TOKEN` from the cert-login flow) and a **commercial operator/
+odds-data licence** for real use — see the Notion integration spec.
 
 ## Run
 
@@ -57,12 +62,16 @@ server/
       normalize.js         # pure response -> unified-shape mappers
       stream.js            # pure order-book delta state machine
       marketStream.js      # CLOB market WebSocket client (injectable socket)
+    betfair/
+      client.js            # JSON-RPC listMarketCatalogue/listMarketBook (read path)
+      normalize.js         # pure catalogue+book -> unified-shape mapper
   test/
-    normalize.test.js      # unit tests for the mappers
-    handlers.test.js       # endpoint tests with a fixture client (no network)
+    normalize.test.js      # Polymarket mappers
+    betfair.test.js        # Betfair mapper
+    handlers.test.js       # endpoint tests, both providers (fixture clients, no network)
     stream.test.js         # book deltas + WebSocket client (fake socket)
     streamEndpoint.test.js # SSE endpoint test (injected fake stream)
-  fixtures/                # sample Gamma market + CLOB book responses
+  fixtures/                # sample Gamma/CLOB + Betfair catalogue/book responses
 ```
 
 ## Live order-book stream (SSE)
