@@ -33,6 +33,14 @@ const MarketList = ({ client, platform, selectedMarketId, onSelect }) => {
         );
     }
 
+    if (markets.length === 0) {
+        return (
+            <Segment basic className="exchange-empty">
+                No markets available for this platform yet.
+            </Segment>
+        );
+    }
+
     return (
         <Menu vertical fluid>
             { markets.map((market) => (

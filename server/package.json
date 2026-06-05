@@ -1,0 +1,14 @@
+{
+  "name": "@korex-tech/exchange-backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Backend proxy implementing the unified exchange contract (Betfair + Polymarket). Phase 0: Polymarket read path.",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test"
+  }
+}

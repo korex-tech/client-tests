@@ -1,0 +1,37 @@
+[
+    {
+        "id": "516710",
+        "question": "Will BTC close above $150k in 2026?",
+        "conditionId": "0xdef456abc",
+        "slug": "btc-above-150k-2026",
+        "active": true,
+        "closed": false,
+        "outcomes": "[\"Yes\", \"No\"]",
+        "outcomePrices": "[\"0.31\", \"0.69\"]",
+        "clobTokenIds": "[\"71321045679252212594626385532706912750332728571942532289631379312455583992563\", \"52114319501245915516055106046884209969926127482827954674443846427813813222426\"]",
+        "volume24hr": 482000,
+        "liquidity": 220000,
+        "endDate": "2026-12-31T23:59:59Z",
+        "rewardsMinSize": 200,
+        "rewardsMaxSpread": 3.5,
+        "groupItemTitle": "Bitcoin price",
+        "events": [ { "title": "Crypto prices 2026", "ticker": "crypto-2026" } ]
+    },
+    {
+        "id": "488221",
+        "question": "Will the Democratic nominee win the popular vote in 2028?",
+        "conditionId": "0xabc123def",
+        "slug": "dem-popular-vote-2028",
+        "active": true,
+        "closed": false,
+        "outcomes": "[\"Yes\", \"No\"]",
+        "outcomePrices": "[\"0.54\", \"0.46\"]",
+        "clobTokenIds": "[\"11111111111111111111111111111111111111111111111111111111111111111111111111111\", \"22222222222222222222222222222222222222222222222222222222222222222222222222222\"]",
+        "volume24hr": 1250000,
+        "liquidity": 640000,
+        "endDate": "2028-11-07T23:59:59Z",
+        "rewardsMinSize": 100,
+        "rewardsMaxSpread": 3,
+        "events": [ { "title": "US Election 2028", "ticker": "us-2028" } ]
+    }
+]

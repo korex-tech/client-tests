@@ -10,9 +10,11 @@ import OpenOrders from './OpenOrders';
 
 import './Exchange.css';
 
+// Polymarket is listed first: it's the venue implemented in the backend's
+// Phase 0 read path (Betfair follows in a later phase).
 const PLATFORMS = [
-    { key: 'betfair', label: 'Betfair' },
     { key: 'polymarket', label: 'Polymarket' },
+    { key: 'betfair', label: 'Betfair' },
 ];
 
 // Top-level trading screen. Lets the user switch between platforms, browse
@@ -23,7 +25,7 @@ const ExchangeDashboard = (props) => {
     // One client instance for the lifetime of the dashboard.
     const client = useMemo(() => props.client || ExchangeClient(), [ props.client ]);
 
-    const [ platform, setPlatform ] = useState('betfair');
+    const [ platform, setPlatform ] = useState('polymarket');
     const [ selectedMarketId, setSelectedMarketId ] = useState(undefined);
     const [ refreshKey, setRefreshKey ] = useState(0);
 

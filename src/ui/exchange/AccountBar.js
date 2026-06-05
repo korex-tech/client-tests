@@ -13,9 +13,9 @@ const AccountBar = ({ client, platform, refreshKey }) => {
     const load = useCallback(async () => {
         setLoading(true);
         const res = await client.getBalance(platform);
-        if (res.status === 'OK') {
-            setBalance(res.balance);
-        }
+        // null distinguishes "loaded but unavailable" (e.g. balance not yet
+        // implemented for this platform) from "still loading" (undefined).
+        setBalance(res.status === 'OK' ? res.balance : null);
         setLoading(false);
     }, [ client, platform ]);
 
@@ -23,9 +23,17 @@ const AccountBar = ({ client, platform, refreshKey }) => {
         load();
     }, [ load, refreshKey ]);
 
-    if (loading || balance === undefined) {
+    if (loading) {
         return (
             <Segment basic><Loader active inline size="small" /></Segment>
+        );
+    }
+
+    if (balance === null) {
+        return (
+            <Segment basic className="exchange-empty">
+                Balance unavailable for this platform.
+            </Segment>
         );
     }
 

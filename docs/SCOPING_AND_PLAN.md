@@ -125,12 +125,15 @@ For a **small, software-driven operation**, the edges fall into three tiers:
 
 ## 8. Recommended build — phased plan (money-first, Polymarket first)
 
-### Phase 0 — Foundations *(no capital at risk)*
-- Jurisdiction resolved (UK/IE). One pre-funding check: **confirm Polymarket UK access** (§7).
-- Stand up the **backend skeleton** behind the existing `ExchangeClient` contract; implement the **Polymarket read path** against live data: Gamma `/markets` + CLOB `/book`/`/price` + market WebSocket. No auth needed.
-- **Validate the normalised shapes** against real Gamma/CLOB responses; extend them for `conditionId`/token IDs, tick size, and reward params (`rewardsMinSize`/`rewardsMaxSpread`).
-- Update SDK target to **clob-client-v2 / unified SDK**; fix `API_CONTRACT.md`.
-- *Deliverable:* live read-only Polymarket dashboard (replaces mock for the read path).
+### Phase 0 — Foundations *(no capital at risk)* — **IN PROGRESS**
+- ✅ Jurisdiction resolved (UK/IE). One pre-funding check remains: **confirm Polymarket UK access** (§7).
+- ✅ **Backend skeleton** stood up in [`server/`](../server/README.md) (dependency-free Node) behind the existing `ExchangeClient` contract: `markets/list` + `markets/get` for **Polymarket** via Gamma `/markets` + CLOB `/book`; everything else returns `NOT_IMPLEMENTED`.
+- ✅ **Normalisation** built and unit-tested against fixtures (Gamma JSON-string fields parsed; BACK=asks asc / LAY=bids desc; `conditionId`/token IDs + reward params carried through). 10 backend tests pass offline.
+- ✅ **Frontend wired** for live mode (`REACT_APP_EXCHANGE_API` switch + CRA dev proxy; Polymarket tab default; graceful empty/unavailable states).
+- ⏳ **Live validation against real Gamma/CLOB** — blocked in this sandbox by the network allowlist (`Host not in allowlist`); run the backend where Polymarket hosts are reachable to confirm shapes against production. *(Mapping is fixture-verified; minor field tweaks may be needed against live data.)*
+- ⏳ Polymarket **WebSocket** bridge for live book updates — deferred to the Phase 0→1 boundary.
+- ✅ SDK target updated to **clob-client-v2 / unified SDK** in `API_CONTRACT.md`.
+- *Deliverable:* read-only Polymarket dashboard driven by the backend (pending live-network confirmation).
 
 ### Phase 1 — Polymarket trading (single venue, real orders)
 - Backend **wallet/key custody** + signing: server-side **L1 EIP-712** → derive API creds; **L2 HMAC** per request; signature type **GNOSIS_SAFE (2)**. Keys live only server-side (vault).

@@ -16,8 +16,10 @@ import {
     getMockBalance,
 } from './mockData';
 
-// Toggle this off when the real backend is available.
-const USE_MOCK = true;
+// Mock mode is the default so the UI works with no backend. Set
+// REACT_APP_EXCHANGE_API (e.g. "/api/exchange") to run against the real backend
+// in server/ — see server/README.md and docs/API_CONTRACT.md.
+const USE_MOCK = !process.env.REACT_APP_EXCHANGE_API;
 
 // Base URL of the backend trading proxy. The backend is responsible for the
 // platform-specific auth that cannot live in the browser (Betfair cert login
