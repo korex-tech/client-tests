@@ -86,18 +86,21 @@ function candidateSql() {
 
 function updateSql() {
   const C = CONFIG;
-  // Only fill empties (COALESCE(NULLIF(trim,''))) so a real identity is never
-  // overwritten; jsondets keys are merged, not replaced.
+  // Fill-only everywhere so a real identity is never overwritten: the scalar
+  // columns use COALESCE(NULLIF(trim,'')); the jsondets keys put the existing
+  // object on the RIGHT of `||` so any DOB/postcode already present WINS (and all
+  // other jsondets keys are preserved). New keys only land where absent — making
+  // a re-run / half-applied resume genuinely idempotent for jsondets too.
   return `
     UPDATE ${C.USERS_TABLE} SET
       ${C.COL_GIVENNAMES}    = COALESCE(NULLIF(TRIM(${C.COL_GIVENNAMES}), ''), $2),
       ${C.COL_SURNAME}       = COALESCE(NULLIF(TRIM(${C.COL_SURNAME}),    ''), $3),
       ${C.COL_EMAIL}         = COALESCE(NULLIF(TRIM(${C.COL_EMAIL}),         ''), $4),
       ${C.COL_PRODUCT_EMAIL} = COALESCE(NULLIF(TRIM(${C.COL_PRODUCT_EMAIL}), ''), $5),
-      ${C.COL_JSONDETS}      = COALESCE(${C.COL_JSONDETS}, '{}'::jsonb)
-                                 || jsonb_build_object(
+      ${C.COL_JSONDETS}      = jsonb_build_object(
                                       '${C.JSON_DOB_KEY}',      $6::text,
                                       '${C.JSON_POSTCODE_KEY}', $7::text)
+                                 || COALESCE(${C.COL_JSONDETS}, '{}'::jsonb)
      WHERE ${C.COL_UID} = $1`;
 }
 
@@ -256,4 +259,4 @@ if (require.main === module) {
   main().catch(e => { console.error(e); process.exit(1); });
 }
 
-module.exports = { buildPlan, detectCollisions, missingColumns, CONFIG };
+module.exports = { buildPlan, detectCollisions, missingColumns, updateSql, CONFIG };

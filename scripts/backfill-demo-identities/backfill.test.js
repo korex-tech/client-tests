@@ -7,7 +7,7 @@ const assert = require('node:assert/strict');
 const fs = require('fs');
 const path = require('path');
 
-const { buildPlan, detectCollisions, missingColumns, CONFIG } = require('./backfill.js');
+const { buildPlan, detectCollisions, missingColumns, updateSql, CONFIG } = require('./backfill.js');
 
 const C = (uid) => ({ uid });
 const ID = (givennames, surname, email) => ({
@@ -77,6 +77,24 @@ test('identities.json is internally consistent', () => {
     const age = (Date.now() - Date.parse(i.dateofbirth)) / (365.25 * 24 * 3600 * 1000);
     assert.ok(age >= 21, `under 21: ${i.givennames} ${i.surname}`);
   }
+});
+
+test('updateSql writes jsondets fill-only (existing keys win, never overwritten)', () => {
+  const sql = updateSql();
+  const j = CONFIG.COL_JSONDETS;
+  // The new keys must be the LEFT operand of `||` and the existing object the
+  // RIGHT, so a DOB/postcode already present wins (true idempotent fill-only).
+  const buildIdx = sql.indexOf('jsonb_build_object');
+  const existingIdx = sql.indexOf(`|| COALESCE(${j}`);
+  assert.ok(buildIdx > -1 && existingIdx > -1, 'expected jsonb_build_object(...) || COALESCE(existing)');
+  assert.ok(buildIdx < existingIdx, 'existing jsondets must be on the RIGHT of || (fill-only)');
+  // Guard against regressing to the overwrite order: COALESCE(existing) || build_object.
+  assert.ok(
+    !new RegExp(`COALESCE\\(${j}[^)]*\\)\\s*\\|\\|\\s*jsonb_build_object`).test(sql),
+    'must not place existing jsondets on the LEFT of || (that overwrites real keys)'
+  );
+  // The scalar columns stay fill-only too.
+  assert.match(sql, /givennames\s*=\s*COALESCE\(NULLIF\(TRIM/);
 });
 
 test('CONFIG exposes the required column set used by preflight', () => {
