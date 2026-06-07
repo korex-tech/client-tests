@@ -1,0 +1,17 @@
+{
+  "_comment": "Realistic, mutually-distinct demo identities for the 11 identity-less korex-brand players. Distinct name + dob + postcode by design, so they do NOT create false Account-Linkage clusters (keeps the verified 'Demo Punter' / 'Claude Verify' test rings clean). All 21+. Edit freely before --apply.",
+  "brand": "korex",
+  "identities": [
+    { "givennames": "James",  "surname": "Whitfield", "dateofbirth": "1989-03-14", "bill_postcode": "BS1 4DJ",  "email": "james.whitfield89@gmail.com" },
+    { "givennames": "Aisha",  "surname": "Khan",      "dateofbirth": "1994-11-02", "bill_postcode": "M14 5PN",  "email": "aisha.khan94@outlook.com" },
+    { "givennames": "Daniel", "surname": "O'Brien",   "dateofbirth": "1986-07-21", "bill_postcode": "D02 XH98", "email": "dan.obrien@protonmail.com" },
+    { "givennames": "Sophie", "surname": "Turner",    "dateofbirth": "1997-01-30", "bill_postcode": "LS6 2AT",  "email": "sophie.turner.97@gmail.com" },
+    { "givennames": "Marcus", "surname": "Bennett",   "dateofbirth": "1982-09-08", "bill_postcode": "B29 6BD",  "email": "m.bennett82@gmail.com" },
+    { "givennames": "Chloe",  "surname": "Davies",    "dateofbirth": "1991-05-17", "bill_postcode": "CF24 3AA", "email": "chloe.davies@outlook.com" },
+    { "givennames": "Ryan",   "surname": "Patel",     "dateofbirth": "1995-12-11", "bill_postcode": "LE2 1TR",  "email": "ryan.patel95@gmail.com" },
+    { "givennames": "Hannah", "surname": "Murphy",    "dateofbirth": "1988-08-25", "bill_postcode": "EH7 5QG",  "email": "hannah.murphy88@proton.me" },
+    { "givennames": "Liam",   "surname": "Foster",    "dateofbirth": "1993-02-19", "bill_postcode": "NE6 5RT",  "email": "liam.foster93@gmail.com" },
+    { "givennames": "Grace",  "surname": "Edwards",   "dateofbirth": "1990-10-04", "bill_postcode": "NG7 2NR",  "email": "grace.edwards@outlook.com" },
+    { "givennames": "Tom",    "surname": "Sullivan",  "dateofbirth": "1984-06-27", "bill_postcode": "G42 8QN",  "email": "tom.sullivan84@gmail.com" }
+  ]
+}
