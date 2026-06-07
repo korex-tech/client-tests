@@ -27,13 +27,14 @@ Writes only `users.{givennames,surname,email,product_email}` and
 
 ## Verified (offline, in client-tests)
 
-- `node --test 'scripts/backfill-demo-identities/*.test.js'` → **7/7 pass**
+- `node --test 'scripts/backfill-demo-identities/*.test.js'` → **8/8 pass**
   (pairing, count-mismatch truncation, `product_email` collision filter,
-  missing-column detector, `identities.json` consistency: 11 unique, distinct
-  name+dob, all 21+).
+  missing-column detector, `updateSql` jsondets fill-only ordering,
+  `identities.json` consistency: 11 unique, distinct name+dob, all 21+).
 - Logic review: dry-run default, single `BEGIN/COMMIT` (`ROLLBACK` on error),
-  idempotent `COALESCE(NULLIF())` fills, `information_schema` preflight,
-  `product_email` UNIQUE guard.
+  fill-only writes everywhere (scalars via `COALESCE(NULLIF())`; jsondets via
+  `build_object(...) || COALESCE(existing)` so present keys win),
+  `information_schema` preflight, `product_email` UNIQUE guard.
 - **Count corroborated independently:** the Notion Phase Tracker records the
   Risk Scorecard shipped live with **"11 players"** — matches the 11 candidates
   the backfill expects.
@@ -51,6 +52,25 @@ script's preflight tell you — it reads `information_schema` live and fails lou
 listing the columns it actually found (incl. brand-like candidates) so a wrong
 guess is a one-line CONFIG fix, not a mid-write error.
 
+## Pre-apply review findings
+
+A correctness pass over `backfill.js` before the live run:
+
+1. **jsondets write is now fill-only (fixed, PR #4 `32cfcf2`).** It previously did
+   `COALESCE(jsondets) || build_object(dob, postcode)`, where the right side of
+   `||` wins — so it would have *overwritten* an existing DOB/postcode, against the
+   "only fills empty fields / idempotent" guarantee. Now `build_object(...) ||
+   COALESCE(jsondets)` so present keys win. Covered by a regression test.
+2. **`product_email` collision guard assumes *per-brand* uniqueness.** It checks
+   `WHERE product = $1 AND product_email = ANY(...)`. If the real constraint is
+   *global*, a cross-brand collision isn't preflighted — but the transaction still
+   rolls back on the violation (fails loud, no corruption). Confirm the constraint
+   scope when you read the schema.
+3. **Wrong brand *value* → silent "nothing to do".** The preflight checks the
+   `product` column *exists*, not that `'korex'` is the right value. A wrong value
+   returns 0 candidates and the script exits 0. See the dry-run note below: **"0
+   found" is the stop-and-investigate signal**, not "already done".
+
 ## Runbook (backend-scoped session)
 
 ```bash
@@ -63,7 +83,10 @@ cd scripts/backfill-demo-identities
 # 2. DRY RUN — prints uid→identity plan, writes nothing
 DATABASE_URL=<korex pg> node backfill.js
 #    → MUST report exactly 11 identity-less korex players + clean plan + preflight OK.
-#    → If it is NOT 11: STOP and report why (candidate query / `product` column).
+#    → If it is NOT 11: STOP and report why. In particular **0 found** is NOT
+#      "already backfilled" — it's the signature of a wrong brand VALUE (e.g. the
+#      column holds 'KOREX'/an id/'korex.bet' not 'korex'); the script prints
+#      "Nothing to do" and exits 0, so verify the value before assuming done.
 #      Do not pass --allow-count-mismatch blindly.
 
 # 3. APPLY — one transaction
@@ -118,5 +141,5 @@ Verified live (2026-06-07) on admin.korex.bet:
 - VIP Whale Watchlist — «named rows instead of blanks»
 - «Anything that didn't light up as expected: …»
 
-PR: client-tests #4 — flipped draft → ready, verified live. Offline tests 7/7.
+PR: client-tests #4 — flipped draft → ready, verified live. Offline tests 8/8.
 ```
