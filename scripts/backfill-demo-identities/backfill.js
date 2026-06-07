@@ -101,6 +101,37 @@ function updateSql() {
      WHERE ${C.COL_UID} = $1`;
 }
 
+// ----- Pure logic (DB-free, unit-tested in backfill.test.js) ----------------
+
+// Which required columns are absent from the set the DB reported.
+function missingColumns(presentSet, required) {
+  return required.filter(c => !presentSet.has(c));
+}
+
+// Pair each identity-less candidate (already ordered) with an identity, 1:1 in
+// order, up to the shorter of the two lists. Pure — no DB, no side effects.
+function buildPlan(candidates, ids) {
+  const n = Math.min(candidates.length, ids.length);
+  const plan = [];
+  for (let i = 0; i < n; i++) {
+    const c = candidates[i], id = ids[i];
+    plan.push({
+      uid: c.uid,
+      givennames: id.givennames, surname: id.surname, email: id.email,
+      dateofbirth: id.dateofbirth, bill_postcode: id.bill_postcode,
+      name: `${id.givennames} ${id.surname}`,
+    });
+  }
+  return plan;
+}
+
+// Rows whose product_email matches a new email but which are NOT one of the
+// accounts we're backfilling → a real UNIQUE-constraint collision.
+function detectCollisions(existingRows, ownedUids) {
+  const owned = new Set(ownedUids.map(String));
+  return existingRows.filter(r => !owned.has(String(r.uid)));
+}
+
 // Preflight: confirm the configured table + columns actually exist before we
 // trust any of the CONFIG guesses. Fails loud (with the columns it DID find, so
 // you can fix CONFIG) rather than erroring mid-write on a bad column name.
@@ -118,7 +149,7 @@ async function verifySchema(client) {
     C.COL_UID, C.COL_GIVENNAMES, C.COL_SURNAME, C.COL_EMAIL,
     C.COL_PRODUCT_EMAIL, C.COL_JSONDETS, C.COL_BRAND,
   ];
-  const missing = required.filter(c => !present.has(c));
+  const missing = missingColumns(present, required);
   if (missing.length) {
     // Offer likely alternatives so CONFIG is a quick fix, not a guessing game.
     const hint = (names) => names.filter(n => present.has(n));
@@ -143,8 +174,7 @@ async function checkEmailCollisions(client, brand, ids, candidateUids) {
       WHERE ${C.COL_BRAND} = $1 AND ${C.COL_PRODUCT_EMAIL} = ANY($2::text[])`,
     [brand, emails]
   );
-  const owned = new Set(candidateUids.map(String));
-  const clashes = rows.filter(r => !owned.has(String(r.uid)));
+  const clashes = detectCollisions(rows, candidateUids);
   if (clashes.length) {
     throw new Error(
       `product_email collision — these emails already belong to other ${brand} accounts:\n` +
@@ -187,16 +217,12 @@ async function main() {
     }
 
     const n = Math.min(candidates.length, ids.length);
-    const plan = [];
-    for (let i = 0; i < n; i++) {
-      const c = candidates[i], id = ids[i];
-      plan.push({ uid: c.uid, name: `${id.givennames} ${id.surname}`, email: id.email });
-    }
+    const plan = buildPlan(candidates, ids);
     console.log('Plan (uid → identity):');
     plan.forEach(p => console.log(`  ${String(p.uid).padEnd(38)} → ${p.name.padEnd(20)} ${p.email}`));
     console.log('');
 
-    const usedUids = candidates.slice(0, n).map(c => c.uid);
+    const usedUids = plan.map(p => p.uid);
     await checkEmailCollisions(client, data.brand, ids.slice(0, n), usedUids);
 
     if (!APPLY) {
@@ -207,11 +233,10 @@ async function main() {
 
     await client.query('BEGIN');
     let written = 0;
-    for (let i = 0; i < n; i++) {
-      const c = candidates[i], id = ids[i];
+    for (const p of plan) {
       const res = await client.query(updateSql(), [
-        c.uid, id.givennames, id.surname, id.email, id.email,
-        id.dateofbirth, id.bill_postcode,
+        p.uid, p.givennames, p.surname, p.email, p.email,
+        p.dateofbirth, p.bill_postcode,
       ]);
       written += res.rowCount;
     }
@@ -227,4 +252,8 @@ async function main() {
   }
 }
 
-main().catch(e => { console.error(e); process.exit(1); });
+if (require.main === module) {
+  main().catch(e => { console.error(e); process.exit(1); });
+}
+
+module.exports = { buildPlan, detectCollisions, missingColumns, CONFIG };

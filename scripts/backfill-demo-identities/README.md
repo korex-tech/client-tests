@@ -37,6 +37,17 @@ DATABASE_URL=... node backfill.js --apply --allow-count-mismatch
 
 Requires the `pg` package (present in the backend env).
 
+## Tests (offline, no DB)
+
+```bash
+node --test 'scripts/backfill-demo-identities/*.test.js'
+```
+
+Covers the DB-free logic — candidate↔identity pairing, the count-mismatch
+truncation, the `product_email` collision filter (uuid/int-agnostic), the
+missing-column detector — and asserts `identities.json` is internally consistent
+(11 entries, unique emails, distinct name+dob, valid dates, all 21+). 7/7 pass.
+
 ## Design notes / safety
 
 - **Self-verifying preflight** (runs in dry-run too): checks the `users` table +
