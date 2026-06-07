@@ -101,6 +101,59 @@ function updateSql() {
      WHERE ${C.COL_UID} = $1`;
 }
 
+// Preflight: confirm the configured table + columns actually exist before we
+// trust any of the CONFIG guesses. Fails loud (with the columns it DID find, so
+// you can fix CONFIG) rather than erroring mid-write on a bad column name.
+async function verifySchema(client) {
+  const C = CONFIG;
+  const { rows } = await client.query(
+    `SELECT column_name FROM information_schema.columns WHERE table_name = $1`,
+    [C.USERS_TABLE]
+  );
+  if (rows.length === 0) {
+    throw new Error(`Table '${C.USERS_TABLE}' not found — fix CONFIG.USERS_TABLE.`);
+  }
+  const present = new Set(rows.map(r => r.column_name));
+  const required = [
+    C.COL_UID, C.COL_GIVENNAMES, C.COL_SURNAME, C.COL_EMAIL,
+    C.COL_PRODUCT_EMAIL, C.COL_JSONDETS, C.COL_BRAND,
+  ];
+  const missing = required.filter(c => !present.has(c));
+  if (missing.length) {
+    // Offer likely alternatives so CONFIG is a quick fix, not a guessing game.
+    const hint = (names) => names.filter(n => present.has(n));
+    throw new Error(
+      `Missing column(s) on '${C.USERS_TABLE}': ${missing.join(', ')}.\n` +
+      `  brand-like columns present: ${hint(['product','brand','product_id','product_name','site']).join(', ') || '(none)'}\n` +
+      `  Columns on table: ${[...present].sort().join(', ')}\n` +
+      `Fix the CONFIG block to match, then re-run.`
+    );
+  }
+  console.log(`Schema OK — '${C.USERS_TABLE}' has all ${required.length} required columns.\n`);
+}
+
+// Guard the product_email UNIQUE (per-brand) constraint: refuse to apply if any
+// new email already exists on a DIFFERENT account in this brand.
+async function checkEmailCollisions(client, brand, ids, candidateUids) {
+  const C = CONFIG;
+  const emails = ids.map(i => i.email);
+  const { rows } = await client.query(
+    `SELECT ${C.COL_UID} AS uid, ${C.COL_PRODUCT_EMAIL} AS product_email
+       FROM ${C.USERS_TABLE}
+      WHERE ${C.COL_BRAND} = $1 AND ${C.COL_PRODUCT_EMAIL} = ANY($2::text[])`,
+    [brand, emails]
+  );
+  const owned = new Set(candidateUids.map(String));
+  const clashes = rows.filter(r => !owned.has(String(r.uid)));
+  if (clashes.length) {
+    throw new Error(
+      `product_email collision — these emails already belong to other ${brand} accounts:\n` +
+      clashes.map(c => `  ${c.product_email} (uid ${c.uid})`).join('\n') +
+      `\nEdit identities.json to use unique emails, then re-run.`
+    );
+  }
+}
+
 async function main() {
   let Client;
   try {
@@ -116,6 +169,7 @@ async function main() {
   await client.connect();
 
   try {
+    await verifySchema(client);
     const { rows: candidates } = await client.query(candidateSql(), [data.brand]);
     console.log(`Brand '${data.brand}': ${candidates.length} identity-less player(s) found; ${ids.length} identities available.\n`);
 
@@ -142,7 +196,11 @@ async function main() {
     plan.forEach(p => console.log(`  ${String(p.uid).padEnd(38)} → ${p.name.padEnd(20)} ${p.email}`));
     console.log('');
 
+    const usedUids = candidates.slice(0, n).map(c => c.uid);
+    await checkEmailCollisions(client, data.brand, ids.slice(0, n), usedUids);
+
     if (!APPLY) {
+      console.log('Preflight passed (schema + email uniqueness).');
       console.log('DRY RUN — no changes written. Re-run with --apply to commit.');
       return;
     }

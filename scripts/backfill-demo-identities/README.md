@@ -39,6 +39,13 @@ Requires the `pg` package (present in the backend env).
 
 ## Design notes / safety
 
+- **Self-verifying preflight** (runs in dry-run too): checks the `users` table +
+  every configured column exists via `information_schema` and **fails loud** —
+  listing the columns it *did* find and any brand-like column — if a `CONFIG`
+  guess is wrong, instead of erroring mid-write. Also refuses to apply if any new
+  email already belongs to a different account in the brand (`product_email`
+  UNIQUE guard). So a wrong schema assumption stops the run cleanly rather than
+  corrupting data.
 - **Dry-run by default**; `--apply` wraps all writes in a single `BEGIN/COMMIT`
   and `ROLLBACK`s on any error.
 - **Idempotent** — only fills fields that are currently empty (`COALESCE(NULLIF(...))`),
