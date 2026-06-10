@@ -44,12 +44,47 @@ header like every other call in `EclContext.js`.
 | --- | --- | --- |
 | `createMarblesRound(twitch_channel, currency, rake_bps)` | `/v1/marbles/createround` | Open a round bound to a Twitch channel. Returns `round_id`. |
 | `fetchMarblesRound(round_id)` | `/v1/marbles/fetchround` | Round status, entrant marbles, per-marble pool totals, overall pot. |
+| `fetchActiveMarblesRound(twitch_channel)` | `/v1/marbles/activeround` | The currently-open round for a channel (what a player bets on now) + entrants. |
+| `setMarblesOptIn(opted_in)` | `/v1/marbles/optin` | Record the player's consent to take part. Wagering is gated on this. |
 | `placeMarblesWager(round_id, marble_id, currency, amount)` | `/v1/marbles/placewager` | Stake `amount` on `marble_id`; debits the player's ledger into the pool. |
 | `settleMarblesRound(round_id, winning_marble_id)` | `/v1/marbles/settleround` | Settle against the winning marble; triggers the 90/10 pro-rata payout + rake. |
 
 Money values follow the platform rule (smallest units, BigNumber, per-currency,
 never cross-currency). The 10% rake reuses the existing commission mechanism in
 `markets2_calculations.js`.
+
+## What's in this repo
+
+The betting engine itself lives in the backend repos (not here), so the
+`/v1/marbles/*` endpoints above are a **proposed contract**. This repo carries
+the client-side pieces that build against it:
+
+- **`src/api/EclContext.js`** — the six methods in the table above.
+- **`src/ui/MarblesTest.js`** — operator/dev harness tab ("Marbles Pool"):
+  create round → place wager → fetch → settle, with raw JSON responses.
+- **`src/ui/MarblesPage.js`** — player-facing page at route `/marbles`, written
+  to be lifted into `matchpoint-client`. Starts with an **opt-in gate** (the
+  player must consent before any wager UI shows; consent is sent via
+  `setMarblesOptIn` and remembered locally), then shows the active round,
+  entrant marbles, a stake form, and the result.
+- **`marbles-bot/`** — the result bot: reads the channel's Twitch chat, tracks
+  `!play` entrants, parses the game's winner announcement, and calls
+  `settleMarblesRound`. See `marbles-bot/README.md`.
+
+**Still needs the backend repos (not in this session's scope):** implementing
+the `/v1/marbles/*` endpoints on `markets2` + ledger, and porting `MarblesPage`
+into the real player frontend (`matchpoint-client`).
+
+## Opt-in
+
+Marbles is presented as an optional novelty round, separate from the main
+sportsbook. Players must explicitly **opt in** before any wager UI is shown:
+
+- `MarblesPage` gates the whole betting UI behind a consent checkbox.
+- Consent is recorded server-side via `setMarblesOptIn(true)` and cached in
+  `localStorage` so the player isn't re-prompted; an "Opt out" control reverses
+  it.
+- The backend should treat the opt-in flag as a hard gate on `placewager`.
 
 ## How this maps onto the existing engine
 

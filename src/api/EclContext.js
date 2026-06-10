@@ -336,6 +336,32 @@ function EclContext() {
 
     }
 
+    // Fetch the currently-open round for a channel (the one a player would bet
+    // on right now), if any. Returns the round plus its entrant marbles.
+    async function fetchActiveMarblesRound(twitch_channel) {
+
+        const params = {
+            twitch_channel
+        };
+
+        const data = await jsonPost('/v1/marbles/activeround', params);
+        return data;
+
+    }
+
+    // Record a player's opt-in (or opt-out) for taking part in Marbles rounds.
+    // Wagering is gated on this consent being true.
+    async function setMarblesOptIn(opted_in) {
+
+        const params = {
+            opted_in
+        };
+
+        const data = await jsonPost('/v1/marbles/optin', params);
+        return data;
+
+    }
+
     // Player stakes `amount` on `marble_id` for this round. Debits the player's
     // ledger balance into the round pool.
     async function placeMarblesWager(round_id, marble_id, currency, amount) {
@@ -431,6 +457,8 @@ function EclContext() {
 
         createMarblesRound,
         fetchMarblesRound,
+        fetchActiveMarblesRound,
+        setMarblesOptIn,
         placeMarblesWager,
         settleMarblesRound,
 
