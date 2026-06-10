@@ -32,6 +32,7 @@
 'use strict';
 
 const net = require('net');
+const { createSettler } = require('./settle');
 
 const TWITCH_IRC_HOST = 'irc.chat.twitch.tv';
 const TWITCH_IRC_PORT = 6667;
@@ -69,49 +70,8 @@ function log(...args) {
 // Entrants we have seen `!play` from this round (the bettable marbles).
 const entrants = new Set();
 
-// Guard so we settle a round at most once.
-let settled = false;
-
-
-// Call the backend to settle the round against the winning marble.
-async function settleRound(winningMarbleId) {
-    if (settled) {
-        log('Already settled; ignoring duplicate winner', winningMarbleId);
-        return;
-    }
-    settled = true;
-
-    if (cfg.dryRun) {
-        log('[DRY_RUN] would settle round', cfg.roundId,
-            'winner=', winningMarbleId);
-        return;
-    }
-
-    try {
-        const res = await fetch(
-            cfg.apiUri + '/api/v1/marbles/settleround',
-            {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'ecltoken': cfg.eclToken
-                },
-                body: JSON.stringify({
-                    round_id: cfg.roundId,
-                    winning_marble_id: winningMarbleId
-                })
-            }
-        );
-        const data = await res.json().catch(() => ({}));
-        log('settleRound ->', res.status, JSON.stringify(data));
-    }
-    catch (err) {
-        // Don't lose the round on a transient failure — allow a retry.
-        settled = false;
-        log('settleRound FAILED, will retry on next winner line:', err.message);
-    }
-}
+// Settle the round against a winning marble (shared, idempotent).
+const settleRound = createSettler(cfg, log);
 
 
 // Parse a single IRC line. We only care about PRIVMSG (chat messages) and

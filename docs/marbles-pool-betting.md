@@ -67,9 +67,16 @@ the client-side pieces that build against it:
   player must consent before any wager UI shows; consent is sent via
   `setMarblesOptIn` and remembered locally), then shows the active round,
   entrant marbles, a stake form, and the result.
-- **`marbles-bot/`** — the result bot: reads the channel's Twitch chat, tracks
-  `!play` entrants, parses the game's winner announcement, and calls
-  `settleMarblesRound`. See `marbles-bot/README.md`.
+- **`marbles-bot/`** — the result feed that determines the winner and calls
+  `settleMarblesRound`. Two sources, sharing `settle.js`:
+  - `result-watcher.js` (**recommended**) — watches the game's local
+    `…\SaveGames\Sessions` folder, parses the `.json`/`.txt` race-result file
+    the game writes, and settles. The game's own authoritative output on a
+    machine you control — not spoofable like public chat.
+  - `bot.js` (fallback) — reads the channel's Twitch chat, tracks `!play`
+    entrants, parses the game's winner announcement.
+  - Screen-capture/OCR of the Victory overlay is possible but fragile (winner
+    font/effects vary), so it's a last resort only. See `marbles-bot/README.md`.
 
 **Still needs the backend repos (not in this session's scope):** implementing
 the `/v1/marbles/*` endpoints on `markets2` + ledger, and porting `MarblesPage`
@@ -93,15 +100,18 @@ sportsbook. Players must explicitly **opt in** before any wager UI is shown:
   race instead of the MySQL esports mirror.
 - Wager placement and settlement reuse `markets2_api.js` /
   `markets2_calculations.js` + the ledger (the single source of truth for money).
-- The Twitch bot is the **result ingestion** path that calls `settleround`.
+- The result feed (local file watcher, chat fallback) is the **result
+  ingestion** path that calls `settleround`.
 
 ## Open questions for the backend / product
 
-- **Licensing.** The UK GC Combined Remote Operating Licence is for real-event
-  betting. A Steam marble race is a novel event type — Mark to confirm whether
-  it's in scope before any real-money round is opened.
-- **Result trust.** The Twitch bot result needs an integrity story (operator
-  confirmation, a settle delay / dispute window) before it moves real money.
+- **Jurisdiction.** Under a permissive offshore licence the UK-GC gates
+  (RNG certification, event classification) don't apply, so the real-money
+  path is feasible. The items below are then operational, not regulatory.
+- **Result trust (security, not compliance).** The winner source must be one
+  the operator controls — prefer the local result file over public Twitch chat
+  (spoofable). For real money, add an operator-confirmation / dispute window
+  before money moves; don't auto-settle from a single signal.
 - **No-winner pool policy.** Roll over to the next round, refund stakes, or
   house — pick one.
 - **Betting window.** When does a round lock (entries close before the race

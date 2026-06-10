@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "description": "Reads Marbles On Stream race results from Twitch chat and settles the matching betting round.",
-  "main": "bot.js",
+  "main": "result-watcher.js",
   "scripts": {
-    "start": "node bot.js"
+    "start": "node result-watcher.js",
+    "watch-file": "node result-watcher.js",
+    "watch-chat": "node bot.js"
   },
   "engines": {
     "node": ">=18"
