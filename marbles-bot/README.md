@@ -41,10 +41,25 @@ node marbles-bot/result-watcher.js
 one in `SyrDim/MarblesOnStreamLeaderboardParser`) and point `WATCH_EXT`/the
 folder at the produced `.json`. The watcher parses `.json`/`.txt` directly.
 
-**Confirm the field names against a real result file.** The JSON parser tries
-common shapes (a `winner`/`first` field, or a `placements`/`leaderboard` array
-sorted to position 1); if your file differs, set `WINNER_JSON_PATH` (e.g.
-`results.0.username`) or `WINNER_TXT_REGEX`.
+### Result file format
+
+The game's `.txt` results (and the "Copy to clipboard" button) are a
+tab-separated table:
+
+```
+Player	Points	Time
+Giuxucbi	0	26.423367
+Wuidezqu	0	26.60117
+...
+```
+
+The watcher parses this directly. In a marble race the first marble to finish
+has the **lowest time**, so the default winner rule is `min-time`. Override
+with `RESULT_WINNER_RULE` = `max-time` or `max-points` if a given mode scores
+differently. For `.json` files the parser tries common shapes (a
+`winner`/`first` field, or a `placements`/`leaderboard` array sorted to
+position 1); if your file differs, set `WINNER_JSON_PATH` (e.g.
+`results.0.username`).
 
 ### File-watcher config
 
@@ -53,7 +68,8 @@ sorted to position 1); if your file differs, set `WINNER_JSON_PATH` (e.g.
 | `MARBLES_SESSIONS_DIR` | no | Folder to watch. Defaults to the `%LOCALAPPDATA%` path above. |
 | `WATCH_EXT` | no | Extensions to react to. Default `json,txt`. |
 | `WINNER_JSON_PATH` | no | Dot-path to the winner name if heuristics miss it. |
-| `WINNER_TXT_REGEX` | no | Regex (one capture group) for the winner in `.txt`. |
+| `WINNER_TXT_REGEX` | no | Fallback regex (one capture group) if a `.txt` isn't the standard table. |
+| `RESULT_WINNER_RULE` | no | How to pick the winner from the table: `min-time` (default, fastest finish), `max-time`, or `max-points`. |
 | `ROUND_ID` | yes | The open round the result maps to. |
 | `API_URI` | yes (unless `DRY_RUN`) | Backend base, e.g. `https://api.korex.bet`. |
 | `ECLTOKEN` | yes (unless `DRY_RUN`) | Auth token for the settle call. |
