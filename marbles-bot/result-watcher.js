@@ -60,9 +60,11 @@ const winnerTxtRegex = new RegExp(
     process.env.WINNER_TXT_REGEX || '^\\s*1(?:st|[.):])?\\s*[-:.]?\\s*([A-Za-z0-9_]+)',
     'm');
 
-// How the winner is chosen from the results table: 'min-time' (fastest finish
-// — the default for a race), 'max-time', or 'max-points'.
-const winnerRule = (process.env.RESULT_WINNER_RULE || 'min-time').toLowerCase();
+// How the winner is chosen from the results table. The game lists results in
+// finishing order with the winner on the first row, so the default is 'first'.
+// Alternatives if a mode scores differently: 'min-time', 'max-time',
+// 'max-points'.
+const winnerRule = (process.env.RESULT_WINNER_RULE || 'first').toLowerCase();
 
 function requireCfg() {
     const missing = [];
@@ -145,9 +147,11 @@ function extractWinner(file, contents) {
 
 // Parse the tab-separated results table the game writes / copies to clipboard:
 //   Player<TAB>Points<TAB>Time
-//   Giuxucbi	0	26.423367
-// In a marble race the first marble to finish has the lowest time, so the
-// default rule is min-time. Non-finishers (time <= 0) are ignored.
+//   Buexiqce	0	87.266876   <- row order is finishing order; this is the winner
+//   ...
+// The game lists the winner on the first row (verified against a real race),
+// so the default rule picks the first row. The Time column does NOT determine
+// the winner. Other rules are available for modes that score differently.
 function extractWinnerFromTable(contents) {
     const rows = [];
     for (const raw of contents.split(/\r?\n/)) {
@@ -165,21 +169,21 @@ function extractWinnerFromTable(contents) {
     }
     if (rows.length === 0) return undefined;
 
-    let pool = rows;
-    let pick;
+    let winner;
     if (winnerRule === 'max-points') {
-        pick = (best, r) => (r.points > best.points ? r : best);
+        winner = rows.reduce((best, r) => (r.points > best.points ? r : best));
     }
     else if (winnerRule === 'max-time') {
-        pick = (best, r) => (r.time > best.time ? r : best);
+        winner = rows.reduce((best, r) => (r.time > best.time ? r : best));
     }
-    else { // 'min-time' (default): fastest finisher wins
-        const finishers = pool.filter((r) => r.time > 0);
-        if (finishers.length > 0) pool = finishers;
-        pick = (best, r) => (r.time < best.time ? r : best);
+    else if (winnerRule === 'min-time') {
+        const finishers = rows.filter((r) => r.time > 0);
+        const pool = finishers.length > 0 ? finishers : rows;
+        winner = pool.reduce((best, r) => (r.time < best.time ? r : best));
     }
-    const winner = pool.reduce((best, r) => (best === undefined ? r : pick(best, r)),
-        undefined);
+    else { // 'first' (default): the game lists the winner on the first row
+        winner = rows[0];
+    }
     return winner ? winner.name : undefined;
 }
 

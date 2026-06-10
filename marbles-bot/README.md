@@ -48,16 +48,17 @@ tab-separated table:
 
 ```
 Player	Points	Time
-Giuxucbi	0	26.423367
-Wuidezqu	0	26.60117
+Buexiqce	0	87.266876   <- winner (rows are in finishing order, winner first)
+Deetiqgo	0	87.855736
 ...
 ```
 
-The watcher parses this directly. In a marble race the first marble to finish
-has the **lowest time**, so the default winner rule is `min-time`. Override
-with `RESULT_WINNER_RULE` = `max-time` or `max-points` if a given mode scores
-differently. For `.json` files the parser tries common shapes (a
-`winner`/`first` field, or a `placements`/`leaderboard` array sorted to
+The watcher parses this directly. **The rows are in finishing order with the
+winner on the first row** (verified against a real race) — the `Time` column
+does NOT determine the winner. So the default winner rule is `first`. Override
+with `RESULT_WINNER_RULE` = `min-time`, `max-time`, or `max-points` only if a
+given mode scores differently. For `.json` files the parser tries common shapes
+(a `winner`/`first` field, or a `placements`/`leaderboard` array sorted to
 position 1); if your file differs, set `WINNER_JSON_PATH` (e.g.
 `results.0.username`).
 
@@ -69,7 +70,7 @@ position 1); if your file differs, set `WINNER_JSON_PATH` (e.g.
 | `WATCH_EXT` | no | Extensions to react to. Default `json,txt`. |
 | `WINNER_JSON_PATH` | no | Dot-path to the winner name if heuristics miss it. |
 | `WINNER_TXT_REGEX` | no | Fallback regex (one capture group) if a `.txt` isn't the standard table. |
-| `RESULT_WINNER_RULE` | no | How to pick the winner from the table: `min-time` (default, fastest finish), `max-time`, or `max-points`. |
+| `RESULT_WINNER_RULE` | no | How to pick the winner from the table: `first` (default — winner is the top row), `min-time`, `max-time`, or `max-points`. |
 | `ROUND_ID` | yes | The open round the result maps to. |
 | `API_URI` | yes (unless `DRY_RUN`) | Backend base, e.g. `https://api.korex.bet`. |
 | `ECLTOKEN` | yes (unless `DRY_RUN`) | Auth token for the settle call. |
