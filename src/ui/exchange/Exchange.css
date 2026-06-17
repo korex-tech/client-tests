@@ -1,0 +1,51 @@
+
+.exchange-dashboard {
+    margin-top: 2em;
+    margin-bottom: 4em;
+    text-align: left;
+}
+
+.exchange-market-event {
+    margin-top: 0.35em;
+    font-weight: bold;
+}
+
+/* Order book back/lay colour coding (Betfair convention). */
+.exchange-back {
+    background-color: #d7e8ff !important;
+}
+.exchange-lay {
+    background-color: #ffe5ef !important;
+}
+
+.exchange-price-cell {
+    cursor: pointer;
+    line-height: 1.2;
+}
+.exchange-price-cell.exchange-best {
+    font-weight: bold;
+}
+.exchange-price-cell:hover {
+    filter: brightness(0.95);
+}
+
+.exchange-price {
+    font-size: 1.05em;
+}
+.exchange-size {
+    font-size: 0.8em;
+    color: #555;
+}
+
+.exchange-ticket-summary {
+    display: flex;
+    justify-content: space-between;
+    margin: 0.5em 0 1em 0;
+    font-size: 0.95em;
+}
+
+.exchange-empty {
+    color: #999;
+    font-style: italic;
+    padding: 1em 0;
+}
