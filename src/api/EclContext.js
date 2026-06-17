@@ -294,6 +294,107 @@ function EclContext() {
 
 
 
+    // --- Marbles pool betting -------------------------------------------
+    //
+    // Wagering layer over "Marbles On Stream" (the Steam marble-racing game
+    // that reads entrants from Twitch chat). A "round" maps one-to-one onto a
+    // single marble race. Players place a wager on a marble (a Twitch entrant);
+    // when the race result comes in, the pot pays out "winner takes 90%" — the
+    // backers of the winning marble split 90% of the total pool pro-rata to
+    // their stake, and the house keeps the remaining 10% (the rake).
+    //
+    // The race RESULT is the event feed: a bot watching the game's Twitch
+    // channel observes which marble won and reports it to settleMarblesRound.
+    // These endpoints are the client contract the backend (markets2 + ledger)
+    // would implement; the 10% rake reuses the existing commission mechanism.
+
+    // Operator opens a round bound to a Twitch channel. rake_bps is the house
+    // cut in basis points (1000 = 10%, i.e. winner takes 90%).
+    async function createMarblesRound(twitch_channel, currency, rake_bps) {
+
+        const params = {
+            twitch_channel,
+            currency,
+            rake_bps
+        };
+
+        const data = await jsonPost('/v1/marbles/createround', params);
+        return data;
+
+    }
+
+    // Fetch a round's current state: status, entrant marbles, per-marble pool
+    // totals and the overall pot.
+    async function fetchMarblesRound(round_id) {
+
+        const params = {
+            round_id
+        };
+
+        const data = await jsonPost('/v1/marbles/fetchround', params);
+        return data;
+
+    }
+
+    // Fetch the currently-open round for a channel (the one a player would bet
+    // on right now), if any. Returns the round plus its entrant marbles.
+    async function fetchActiveMarblesRound(twitch_channel) {
+
+        const params = {
+            twitch_channel
+        };
+
+        const data = await jsonPost('/v1/marbles/activeround', params);
+        return data;
+
+    }
+
+    // Record a player's opt-in (or opt-out) for taking part in Marbles rounds.
+    // Wagering is gated on this consent being true.
+    async function setMarblesOptIn(opted_in) {
+
+        const params = {
+            opted_in
+        };
+
+        const data = await jsonPost('/v1/marbles/optin', params);
+        return data;
+
+    }
+
+    // Player stakes `amount` on `marble_id` for this round. Debits the player's
+    // ledger balance into the round pool.
+    async function placeMarblesWager(round_id, marble_id, currency, amount) {
+
+        const params = {
+            round_id,
+            marble_id,
+            currency,
+            amount
+        };
+
+        const data = await jsonPost('/v1/marbles/placewager', params);
+        return data;
+
+    }
+
+    // Settle a round against the winning marble (as reported from the Twitch
+    // race result). Triggers the 90/10 pro-rata payout to the winning backers
+    // and books the rake to the house.
+    async function settleMarblesRound(round_id, winning_marble_id) {
+
+        const params = {
+            round_id,
+            winning_marble_id
+        };
+
+        const data = await jsonPost('/v1/marbles/settleround', params);
+        return data;
+
+    }
+
+
+
     async function logout() {
         const data = await jsonPost('/v1/account/logout', {});
         if (data.status === 'OK') {
@@ -353,6 +454,13 @@ function EclContext() {
         fetchAllClaimedCodes,
         fetchCodeStats,
         claimCode,
+
+        createMarblesRound,
+        fetchMarblesRound,
+        fetchActiveMarblesRound,
+        setMarblesOptIn,
+        placeMarblesWager,
+        settleMarblesRound,
 
     };
 

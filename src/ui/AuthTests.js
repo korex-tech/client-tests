@@ -6,6 +6,7 @@ import DepositJSTest2 from './DepositJSTest2.js';
 import WithdrawalTest from './WithdrawalTest.js';
 
 import PromotionsTest from './PromotionsTest.js';
+import MarblesTest from './MarblesTest.js';
 
 
 const AuthTests = (props) => {
@@ -28,6 +29,12 @@ const AuthTests = (props) => {
             menuItem: 'Promotions Test',
             render: () =>
                 <Tab.Pane><PromotionsTest ecl_context={ props.ecl_context } /></Tab.Pane>
+        },
+
+        {
+            menuItem: 'Marbles Pool',
+            render: () =>
+                <Tab.Pane><MarblesTest ecl_context={ props.ecl_context } /></Tab.Pane>
         }
 
     ];
