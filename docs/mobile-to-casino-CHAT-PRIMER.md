@@ -62,15 +62,30 @@ grids, a replay viewer, and **KOREX adapters already shipped and live-verified**
 (wallet→ledger for entry fees/refunds, auth→ECLToken, signed race webhook the
 market layer can consume for betting).
 
-The product design is an ownership economy, not just a game: regular users bet
+The product design is an ownership economy, not just a game: regular users play
 and open discovery boxes; **marble owners** buy/sell/upgrade marbles for
 appreciation + royalties; **team owners** run lineups across a 10-tier,
-2-week-season league with promotion/relegation. Margins are baked in across
-races, betting, the transfer market, boxes, and account upgrades. Power-up cards
-are deliberately Phase 2.
+2-week-season league with promotion/relegation. Power-up cards are deliberately
+Phase 2.
 
-The point: marbles is novel, ownable, replayable, and **shareable** — the kind of
-thing that travels on mobile and social. It's my most-built *new* product.
+**The most important thing about marbles: it's deliberately structured so it
+won't be considered gambling. That's the whole reason it's a separate entity and
+a separate repo — not just a KOREX vertical.** That non-gambling status is a real
+asset: I can market it where a licensed casino legally *can't* — mainstream app
+stores, paid/social ads, influencers, a broader (still-adult) audience, and
+jurisdictions where gambling is restricted. It's novel, ownable, replayable, and
+**shareable** — the kind of thing that travels on mobile. It's my most-built
+*new* product, and I think it's my best top-of-funnel.
+
+One honesty note for you to pressure-test: "separate repo" does **not** by itself
+make something legally not-gambling. The spec still contains gambling-shaped
+pieces — paid-entry races with **20–30% randomness**, *betting on league races*
+(a KOREX market category), and gacha-style **discovery boxes**. The clean
+architecture helps (the race engine never knows betting exists; KOREX's market
+layer consumes race events for any wagering, and money stays in the KOREX
+ledger), but whether marbles "isn't gambling" is a legal conclusion per
+jurisdiction — prize + chance + consideration — not a given. Keep me honest on
+this, and tell me plainly when I need a gambling lawyer rather than you.
 
 ### 3. Casino — the gap
 
@@ -86,46 +101,57 @@ engine** and my **least-built vertical**. That tension is the whole problem.
 
 ## The problem I want to chew on
 
-**How do I get users from mobile into the casino?**
+The goal has sharpened: **I want to drive people TO marbles — and I'm thinking
+about using promotions on the game to do it.** Marbles is the growth engine
+*precisely because* it isn't gambling: I can run promos and ads for it that I
+could never run for the casino.
 
-My current instinct — tell me if it's right:
+My instinct:
 
-- A cold, direct "mobile ad → slots" funnel is expensive, undifferentiated, and
-  pointless right now because *the casino doesn't exist yet.*
-- The asset that actually pulls people in on mobile is **marbles** (+ the
-  Telegram bot already proving the mobile path). Marbles is differentiated and
-  viral-friendly; casino is generic but high-margin.
-- The **bridge is the shared KOREX wallet + identity.** A user who deposits once
-  for marbles is one tap from casino — same ledger, same account, same KYC.
+- Marbles (+ the Telegram bot already proving the mobile path) is the
+  acquisition front door — non-gambling, marketable, shareable.
+- Promotions *on marbles* are easier and safer than gambling promos: free race
+  entries, marble/skin drops, referral rewards, season passes, leaderboards —
+  none of it is a "free bet," so most gambling-ad / RG promo rules don't bite.
+- The shared KOREX wallet + identity is the bridge to the casino *for users who
+  also want to gamble* — same account, same KYC.
 
-So the strongest funnel might be: **marbles / Telegram = top-of-funnel
-acquisition + retention → shared wallet gets them deposited → casino is the
-high-margin layer they convert into and get retained on.** Marbles opens the
-door; casino keeps the margin.
-
-But I'm not sure about sequencing, the actual cross-sell mechanics, or whether
-I'm overweighting marbles because it happens to be the thing that's built.
+**The tension I want you to attack:** the shared wallet and the shared
+bonus/restricted-funds engine are exactly what could *collapse* the non-gambling
+separation I built marbles for. If marble promos route through the gambling bonus
+engine, or I cross-sell casino aggressively off a marbles audience, a regulator
+can argue it's all one gambling product under one roof — and I lose the
+non-gambling status that made marbles worth marketing in the first place. So:
+drive people to marbles with promotions, yes — but the money/promo boundary
+between "not-gambling marbles" and "gambling KOREX" has to be *real*, not just a
+different table in the same ledger. And the casino cross-sell is a careful,
+secondary step, not the headline.
 
 ## What I want from you in this chat
 
 Work these with me, and challenge my framing where it's weak:
 
-1. **Is the "marbles as top-of-funnel, casino as monetization" thesis right** —
-   or am I rationalizing because marbles is what's built? What would make it
-   wrong?
-2. **The actual mobile→casino journey.** Concrete: a user lands (Telegram bot /
-   mobile web / app), what's the path to a first deposit and a first casino
-   spin? Where are the deep-links, the handoffs, the drop-off risks?
-3. **Cross-sell mechanics between marbles and casino** on a shared wallet —
-   shared bonus/restricted-funds engine, retention loops, what's compliant, what
-   feels good vs scammy.
-4. **Sequencing under near-zero budget.** What do I do *first* that creates real
-   value — pick the casino aggregator? Host the backend? Lean harder on marbles
-   + Telegram while casino is still mock? What's the order that de-risks the
-   most for the least spend?
-5. **The aggregator decision** (Slotegrator vs EveryMatrix/SlotMatrix vs
-   SOFTSWISS) — through the lens of *mobile-first* and *cross-sell with marbles*,
-   not just raw catalog/uptime.
+1. **Keep the non-gambling status intact.** Where's the line? Which parts of the
+   marbles design (paid races + randomness, league betting, discovery boxes,
+   shared wallet, the bonus engine) most threaten "not gambling," and how do I
+   drive traffic + run promos without crossing it? Flag clearly where I genuinely
+   need a gambling lawyer, not you.
+2. **Promotions to drive people to marbles.** What actually works for a
+   non-gambling skill/ownership game on mobile — free entries, marble/skin drops,
+   referral loops, season passes, leaderboards, creator/influencer hooks? Which
+   give the best acquisition-per-pound on a near-zero budget, and which quietly
+   *look* like gambling inducements and should be avoided?
+3. **The marbles → casino bridge, done safely.** *If* I cross-sell the gambling
+   side to marbles users, what's the compliant way to do it on a shared wallet
+   without collapsing the separation — and is it even worth the regulatory risk
+   versus just growing marbles on its own?
+4. **Sequencing under near-zero budget.** What creates real value first — push
+   marbles + promos + Telegram now (the casino is still mock anyway), host the
+   backend, or pick the casino aggregator? What order de-risks the most for the
+   least spend?
+5. **Aggregator pick, later** (Slotegrator vs EveryMatrix/SlotMatrix vs
+   SOFTSWISS) — only once casino is actually on the roadmap; judge it through
+   mobile-first + safe-cross-sell, not just catalog/uptime.
 
 ## Ground rules
 
@@ -146,8 +172,11 @@ Work these with me, and challenge my framing where it's weak:
 - **Hosting the backend** ≈ ~1 day / ~$20–40/mo VPS, but alone it only unlocks
   the *account* half (login/balances/history) — bets/deposits/casino stay gated
   on provider picks.
-- **Marbles:** built through Phase 4, standalone repo, KOREX adapters live; own
-  economy (owners/teams/leagues, 2-week seasons); cards are Phase 2.
+- **Marbles:** deliberately **not gambling** (the reason it's a separate entity);
+  built through Phase 4, standalone repo, KOREX adapters live; own economy
+  (owners/teams/leagues, 2-week seasons); cards are Phase 2. Non-gambling status =
+  marketable where casino isn't, but it's a legal conclusion to *protect*, not a
+  given.
 - **Casino:** zero integration today; blocked on aggregator (Slotegrator /
   EveryMatrix / SOFTSWISS).
 - **Mobile today:** Telegram bot already does real login/2FA/balances against the
@@ -157,5 +186,6 @@ Work these with me, and challenge my framing where it's weak:
   vs betting drama is an unresolved tension worth keeping in mind for the betting
   cross-sell.
 
-Okay — that's the table set. Start with question 1: is my marbles-as-funnel,
-casino-as-monetization thesis actually right, and what would make it wrong?
+Okay — that's the table set. Start with question 1: how do I drive people to
+marbles and run promotions on it *without* jeopardising the non-gambling status
+that makes it worth marketing in the first place?
