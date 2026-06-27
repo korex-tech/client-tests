@@ -1,6 +1,35 @@
 # Demo-player identity backfill (korex) — apply handoff
 
-**Status:** artifact built + verified offline; **NOT yet applied to the live DB.**
+> ## ✅ RESOLVED — SUPERSEDED, do NOT apply (2026-06-08)
+>
+> **No database change is needed and this script must not be run.** A backend-scoped
+> session checked the live DBs and found the work was already done a different way:
+>
+> - The **droplet DB (admin.korex.bet)** already has all **11 `korex` players with
+>   distinct realistic names** (James Hartley, Daniel Okafor, Sofia Marchetti, Aisha
+>   Rahman, Liam Connolly, Mei Tanaka, Carlos Mendez, Olivia Bennett, Viktor Petrov,
+>   Priya Nair, Noah Williams). The candidate query (`givennames IS NULL AND surname
+>   IS NULL`) returns **0** → already done. `product='korex'` confirmed correct (not a
+>   wrong-brand false negative).
+> - The local dev DB has only 6 `korex` players, 1 nameless (a QA account, not a demo
+>   player).
+>
+> **Two script bugs vs the live schema** (the preflight would have caught them at
+> apply, but they invalidate the runbook below — the 8/8 offline tests only covered
+> pure logic, so neither surfaced):
+> 1. The real table is **`uusers`** (connector `u`-prefix), not `users`.
+> 2. **`jsondets` is a `text` column, not `jsonb`** — the `jsonb_build_object(...) ||
+>    COALESCE(jsondets,'{}'::jsonb)` write would have errored.
+>
+> The script is kept only as a **reference artifact**.
+> [PR #4](https://github.com/korex-tech/client-tests/pull/4) was **closed (not merged)**
+> as superseded. Everything below this banner is the **original pre-apply handoff,
+> retained for history** — it is no longer an action item.
+
+---
+
+**Status:** ~~artifact built + verified offline; **NOT yet applied to the live DB.**~~
+**SUPERSEDED — see banner above (closed 2026-06-08, no apply needed).**
 The apply must run from a **backend-scoped session** with the korex `DATABASE_URL`
 (from `secrets/korex_dev_secrets.json`). This `client-tests` sandbox structurally
 cannot reach the korex Postgres, so the script is parked here as a portable handoff.
