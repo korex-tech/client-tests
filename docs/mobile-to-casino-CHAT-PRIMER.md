@@ -87,6 +87,32 @@ ledger), but whether marbles "isn't gambling" is a legal conclusion per
 jurisdiction — prize + chance + consideration — not a given. Keep me honest on
 this, and tell me plainly when I need a gambling lawyer rather than you.
 
+**Decided split (the architecture I'm going with):** betting *on* marble races
+happens on **KOREX** (the licensed gambling entity), fed by a betting **API /
+race-event stream** from the marbles service — technically this separation is
+trivial and already in the build. Paid **race entries** stay on the marbles side,
+framed as a **skill competition** (entry fee → prize pool), not a bet. This puts
+all the clearly-gambling activity on KOREX. Two soft spots I want you to attack,
+not rubber-stamp:
+
+1. **"Skill competition" is a legal test, not a label.** With ~35% seeded
+   randomness in v1 races, the answer splits by jurisdiction — the UK can call a
+   chance+skill game "gaming" even if skill predominates; the US "dominant
+   factor" test is friendlier and my qualifying-grid data (favorite wins ~49–66%)
+   helps argue skill predominates. Per-market lawyer call, not a design decision.
+2. **A separate betting API doesn't separate the *money*.** If entry fees + prize
+   payouts run through the same KOREX licensed ledger/balance used for betting and
+   casino, a regulator can still fold marbles into the gambling operation. If the
+   non-gambling status matters, the entry/prize money path may need to be
+   genuinely ring-fenced, not just a different table in the same ledger.
+
+Also: because KOREX would take bets on races run by a *related* entity, that's a
+**market-integrity / conflict** question (like a league betting on its own
+matches). My deterministic, record-and-replay, calibrated sim is a real asset
+here — provably fair and auditable — so lean on it. And **discovery boxes (gacha)
+are a separate gambling-risk vector** from the race entries; don't let the
+entries/betting split distract from those.
+
 ### 3. Casino — the gap
 
 Here's the uncomfortable truth: **KOREX has no casino integration at all.** No
