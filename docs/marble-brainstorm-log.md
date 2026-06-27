@@ -43,6 +43,61 @@ tech). Overflow becomes a feature.
   starts the instant a min field is ready?
 - Which demand driver should carry the most weight now that energy is parked?
 
+## Decision/idea 3 — energy: why it's parked (not just "on hold")
+Energy is the steepest mechanic in the design and the most optional. The concept (stamina)
+is intuitive; the *model* (zones, drain rates, rotation math, recharge pricing) is the wall.
+Its jobs were daily monetisation + multi-marble demand; demand is already covered (idea 1),
+and entry fees already gate spam, leaving only daily monetisation — not worth the cognitive
+load at launch. Aligns with the broad, shallow-onboarding acquisition goal.
+- **Decision:** launch WITHOUT energy. If daily monetisation/pacing is wanted later, use a
+  **rest period / cooldown ("energy-lite")**: "marble rests X hrs after a race, or pay to
+  skip." Keep the full zone model only as a far-future option.
+
+## Decision/idea 4 — breeding & marble dust (PHASE 2 / future)
+Horse-racing bloodstock economy translated to marbles (the breeding economy can rival the
+racing prize economy). Behind the Owner tier; fully optional, never in the new-user path.
+- **Dust:** a famous / Hall-of-Fame marble produces tradable "dust" on a cooldown; dust sells
+  on the open market (transfer-market margin). Gives legends a perpetual *legacy income* and a
+  reason to HOLD rather than redeem.
+- **Finite dust + generational turnover:** each legend yields dust up to a **lifetime cap**
+  (cooldown = rate, cap = total), then becomes "breeding-retired." Early dust from a tapped-out
+  legend is a rare collectible. As old lines dry up, new legends must emerge → dynasties +
+  natural supply control ("supply ≈ retiring + growth").
+- **Infusing/breeding:** apply dust to develop a marble or create offspring; outcome **capped by
+  growth potential** (no god-marbles → protects competitive integrity + betting drama).
+- **Anti-exploit rules:** breeding requires **2+ DIFFERENT source dusts** (no same-source
+  stacking/duplication); close-line pairing carries an **inbreeding penalty** (weaker / higher
+  defect chance) → rewards crossing distinct lines, keeps the marketplace diverse.
+- **Pedigree/provenance:** public bloodline/lineage tree in the Hall of Fame; provenance drives
+  price (as in real bloodstock).
+- **Sinks (anti-inflation):** breeding consumes dust + a fee + carries failure/variance; tie the
+  faucet to the supply rule.
+- **Caution:** random infusion outcomes are loot-box-adjacent → compliance flag (deterministic-
+  with-ranges is the safer option).
+
+## Decision/idea 5 — pull-or-breed entry + development-through-racing
+- **Entry point:** acquire a marble cheaply (plain marble OR a pack pull with some stats) and
+  develop/breed it. A cheap marble with high hidden **growth potential** = a development project.
+- **Does a marble improve by racing?** The spec already implies it (attributes INCREASE through
+  Rookie→Prospect→Prime, stabilise Veteran, decline Retirement) but never says HOW. Proposed
+  mechanism: **racing develops the marble toward its growth-potential ceiling.**
+  - **Nature vs nurture (Football Manager model):** growth potential = ceiling (nature); racing
+    realises it (nurture). Identical starting stats + different GP = totally different upside →
+    GP is the prospect's hidden value.
+  - **Race IQ gets a home:** physical attributes grow via development/training; **Race IQ grows
+    specifically through racing experience** — solves the earlier "orphan stat" problem.
+  - **Lifecycle gates the curve:** develop Rookie→Prime (steep then tapering), none in Veteran,
+    decline in Retirement → a window to develop = urgency + strategy.
+  - **Track specialisation:** racing a track type builds affinity (spec's "identifying long-term
+    track specialisations").
+  - **Anti pay-to-win:** racing-earned development (engagement) + optional paid acceleration
+    (monetisation), BOTH capped at GP → money buys speed-to-ceiling, never a higher ceiling.
+- **Core value loop this completes:** acquire cheap → develop through play → realise potential →
+  breed / sell at a premium → offspring & dust seed the next generation. Player-driven value
+  creation — the engine of every successful sports-sim / collectible-breeding game.
+- **GP partly hidden at acquisition** → scouting/analytics meta + chase (bet on unseen
+  potential, as in real bloodstock).
+
 ## Carried-over context (from earlier this session)
 - Betting on marble races runs on **KOREX** (gambling entity) via a race-event API; paid race
   **entries** framed as a skill competition on the (non-gambling) Marbles side.
