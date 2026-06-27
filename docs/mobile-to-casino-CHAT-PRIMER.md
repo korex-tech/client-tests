@@ -153,6 +153,48 @@ between "not-gambling marbles" and "gambling KOREX" has to be *real*, not just a
 different table in the same ledger. And the casino cross-sell is a careful,
 secondary step, not the headline.
 
+## Cross-sell mechanics — marbles → gambling (my working list)
+
+I want to drive marbles traffic into KOREX gambling. Loot boxes are on my mind.
+Here's where I've landed, ranked by effect × safety — pressure-test it.
+
+**Step 0 — the gate (non-negotiable).** My marbles audience is broad *by design*,
+so it legally includes people I must NOT funnel: under-18s, self-excluded users,
+restricted geos. Every gambling surface/offer sits behind one gate: **18+ / KYC
+verified / geo-allowed / not self-excluded / within RG limits.** Marbles is front
+of house; the casino is a gated back room only eligible verified users can see.
+Build it once against the existing KOREX KYC/RG stack; everything below plugs in.
+
+**Tier 1 — lead with these (high effect, defensible):**
+1. **Bet on the marble races themselves** — the best bridge. A fan betting on a
+   race they already follow crosses into KOREX gambling on familiar IP. Lowest
+   friction, most defensible, and the deterministic provably-fair sim is a
+   marketing weapon ("bet on a game you can audit"). Race betting should be the
+   first gambling thing a marbles user touches — not slots.
+2. **Live race events / appointment viewing** — scheduled league races, watch
+   parties, leaderboards → live betting handle on KOREX.
+3. **One account / one wallet / one tap (gated)** — already built; sell it as
+   convenience, not inducement (the distinction matters legally).
+
+**Tier 2 — workable with care:**
+4. **Unified loyalty / XP / VIP** across both, but gambling perks behind the gate
+   + RG checks; safest if points redeem within their own domain rather than
+   marbles-effort converting straight into gambling credit.
+5. **Welcome / first-deposit offers** surfaced *only* to gate-cleared users who
+   opted into gambling — not broadcast to the whole marbles base.
+
+**Tier 3 — the trap (loot boxes that pay gambling value):** a discovery/loot box
+that drops free spins, bonus bets, or casino credit is the most dangerous
+mechanic here. It (a) reclassifies marbles as gambling by directly linking the
+two — collapsing the separation — and (b) is the textbook "gateway" pattern UK/EU
+regulators are actively hunting, *especially* off a non-gambling-marketed
+audience. **Keep gambling value OUT of the boxes:** boxes give marbles-only
+rewards; if I want a casino teaser, it's an explicit, separate, age-gated offer
+("you're verified 18+ — here's 20 free spins"), never a random drop.
+
+**One-line plan:** acquire broadly with marbles → convert through **race betting
+first** (gated) → only then widen to casino/sportsbook.
+
 ## What I want from you in this chat
 
 Work these with me, and challenge my framing where it's weak:
