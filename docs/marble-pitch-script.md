@@ -1,80 +1,82 @@
-# Marble Racing × KOREX — pitch script (the "juice" version)
+# Marbles × KOREX — pitch script (integrated-universe version)
 
-Punchy investor/pitch copy: explains the product, makes it exciting, and proves it
-generates revenue. Written to be used VERBATIM (render in "preserve" mode so the tool
-lays it out without rewording). Visual: KoreX Racing Style Bible (Clean Futurism —
-silver/white, electric purple #9400D3, neon cyan #00FFFF, bright studio). Canonical 10%
-rake. No crypto token, no fake investors.
+Concept (locked): **Marbles ARE a KOREX casino product — one integrated universe.**
+Not a separate game that funnels to a casino. The marble is simultaneously the casino
+*content* (games you play and bet on) and the *asset* you own, develop, trade, and breed —
+all inside KOREX, one wallet. Explains + excites + proves revenue. Use VERBATIM (preserve).
+Consistent structure: every slide = bold headline + three tight lines. Visual: KoreX
+Racing Style Bible (Clean Futurism: silver/white, electric purple #9400D3, neon cyan
+#00FFFF, bright studio). Canonical 10% rake. No crypto token, no fake investors.
 
 ---
 
 **1 — Title**
-# MARBLE RACING × KOREX
-A sport you can own. A casino in disguise. A money machine that fires every 3 minutes.
+# MARBLES × KOREX
+The casino product you can own — play it, bet on it, breed it. One universe.
 
-**2 — The hook**
-## Horse-racing's bloodstock empire. Esports' audience. A casino's margins.
-All in one game of marbles.
-Marbles race on physics tracks. Players own them, grow them, breed them, and bet on them —
-and the whole thing quietly feeds a licensed casino.
+**2 — The big idea**
+## Marbles aren't a side game that points at a casino. They ARE a KOREX casino product.
+- Games you play and bet on — and assets you own — the same object.
+- One wallet. One universe. No "other app."
+- A casino that's also a living economy.
 
-**3 — The big idea**
-## It looks like a game. It earns like a casino. And legally, it isn't gambling.
-- You own real, appreciating assets — not skins, *assets*.
-- Every race is provably fair — a world first.
-- It's the acquisition funnel a casino legally can't build for itself.
+**3 — What lives inside KOREX**
+## A whole marble universe, inside the casino.
+- Marble Racing — 24 marbles, a new race every 3 minutes, bet live.
+- Marble-built casino games — Crash, Plinko, physics-roulette — same engine.
+- Every one provably fair.
 
-**4 — How a race works**
-## 24 marbles. One track. Part skill, part chaos.
-- Each marble's stats (speed, accel, stability, agility, endurance) set the skill.
-- Bounces, collisions and shortcuts bring the drama.
-- A new race every 3 minutes, 24/7 — and you can prove every single one was fair.
+**4 — The twist nobody else has**
+## The thing you bet on is the thing you own.
+- In every other casino, the game and the player are separate.
+- Here they're the same marble.
+- You don't just play the casino — you hold a piece of it.
 
-**5 — The unfair advantage**
-## Every betting product on Earth asks you to *trust* it. Ours can *prove* it didn't cheat.
-- Fully simulated, recorded, replayable, auditable.
-- No sportsbook taking bets on real-world events can ever claim this.
-- Trust isn't a marketing line here — it's math. That's the moat.
+**5 — Provably fair = the moat**
+## Every casino asks you to trust the math. Ours lets you audit it.
+- Deterministic, recorded, replayable.
+- A fairness guarantee no traditional casino game can make.
+- Trust as a feature, not a promise.
 
-**6 — The loop that mints spenders**
-## Buy a $5 marble → race it → grow it into a legend → breed its bloodline → it pays you for years.
-- Every step is a reason to spend, and a reason to come back.
-- Cheap to start, deep enough to obsess over.
-- This isn't a session. It's a career.
+**6 — Own & grow (the asset layer)**
+## Buy a $5 marble. Race it into a legend.
+- It grows the more it plays, up to its hidden potential.
+- Top marbles earn a guaranteed value floor, backed by a ring-fenced reserve.
+- Legends retire into a public Hall of Fame.
 
-**7 — Marbles are assets that appreciate**
-## Players don't churn. They're invested — literally.
-- A marble grows the more it races, up to its hidden potential (nature sets the ceiling, play unlocks it).
-- Top performers earn a *guaranteed value floor*, each backed by its own ring-fenced reserve.
-- Legends retire into a public Hall of Fame. Real provenance, real worth.
-
-**8 — Breeding: the bloodstock empire**
+**7 — Breed (the economy that compounds)**
 ## Champions don't retire. They breed.
-- A legend produces finite, tradable "dust" — cross two bloodlines to mint the next generation.
-- Dynasties, pedigree, provenance — exactly what makes real horse racing a billion-dollar market.
-- An owner can earn from a marble years after its final race.
+- Finite, tradable "dust" → cross bloodlines → dynasties, pedigree, provenance.
+- The casino grows its own next generation of content — player-made.
+- A second economy as deep as the first.
 
-**9 — Revenue Engine 1: the in-game economy**
+**8 — The loop**
+## Play → win → own → grow → breed → trade. Forever.
+- Every step spends, earns, or both.
+- The same marble moves through every part of the casino.
+- A product players can't put down.
+
+**9 — Revenue 1: the play**
 ## Every 3 minutes, money flows.
-- 24 marbles × $10 entry = a $240 pool → 10% rake = $24 to the platform.
-- Now multiply that by every lobby, every 3 minutes, all day.
-- Plus 100%-margin lines: account upgrades, cosmetics, marble certification, season fees — and the marketplace, boxes, and power-ups on top.
+- 24 × $10 = a $240 pool → 10% rake = $24 to the platform.
+- Multiply by every lobby, every 3 minutes, all day.
+- Plus betting on races and marble casino games, at 10% margin.
 
-**10 — Revenue Engine 2: betting**
-## Then people bet on the races.
-- League races are bettable, run on KOREX, at 10% margin.
-- The provably-fair sim is the hook no real-world book can match: bet on a game you can audit.
-- The audience is already watching. Now they have skin in it.
+**10 — Revenue 2: the economy**
+## And the asset layer prints on its own.
+- Marketplace (5% each side), discovery boxes, breeding/dust, certification.
+- 100%-margin lines: account upgrades, cosmetics, season fees.
+- Players pay to play — and pay to own.
 
-**11 — Revenue Engine 3: the casino (the masterstroke)**
-## A game we can advertise *anywhere* — that opens the door to the product a casino *can't* advertise.
-- Because Marbles isn't gambling, acquisition is broad and cheap.
-- One account, one wallet → an eligible, verified player is one tap from the casino.
-- The highest-margin, always-on product in gambling — fed by a funnel competitors can't legally build.
+**11 — Why it can't be copied**
+## A casino product with a real moat.
+- Owned marble IP + a provably-fair sim + a player-owned economy.
+- A generic casino can bolt on slots.
+- It cannot bolt on a universe players own.
 
 **12 — The big picture**
-## One audience. Three money machines.
-- Acquire cheap (it isn't gambling) → monetise engagement (the in-game economy) → monetise intent (betting + casino).
-- Already built: the provably-fair race engine, tracks, and the KOREX wallet/identity link.
-- Next: live betting and the casino.
-- Two economies. One audience. A machine that runs every three minutes.
+## One universe. One wallet. Two ways to earn.
+- Casino play (racing + marble games + betting) and a living asset economy — same product.
+- Built: the provably-fair engine, tracks, KOREX wallet/identity.
+- Next: the marble casino games and live betting.
+- A KOREX casino product that runs every three minutes — and that players own.
