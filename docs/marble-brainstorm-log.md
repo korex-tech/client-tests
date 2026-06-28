@@ -98,6 +98,30 @@ racing prize economy). Behind the Owner tier; fully optional, never in the new-u
 - **GP partly hidden at acquisition** → scouting/analytics meta + chase (bet on unseen
   potential, as in real bloodstock).
 
+## Session status (2026-06-27)
+- **Pitch decks produced:**
+  - Canva (edited, on-brand-ish: purple headlines, placeholders removed) —
+    edit: https://www.canva.com/d/JeLm9s3-JEbHAFn · view: https://www.canva.com/d/xdGzuYi7uT-Ls2e
+  - Gamma (fully on-brand, Style Bible imagery, exact copy preserved) —
+    https://gamma.app/generations/fXQNO6ysEDVeK1AFH6XvA
+  - Canonical copy: `marble-pitch-script.md`. Concept locked: Marbles is its own
+    separate (advertisable, non-gambling) product, cross-promoted with the KOREX
+    casino, same marbles playable on casino products. Connected, not merged.
+- **Deck critique (next improvements to make it investor-complete):** add a numbers
+  section (market size, ARPU/LTV/CAC, projections), a risk/regulatory slide, a
+  roadmap/team slide, and an ask. Address the "not gambling vs casino games"
+  mechanism explicitly. Soften "$5 → earn for years" (reads like guaranteed return).
+- **Tooling notes:** Gamma can't be edited via the API (regenerate for changes;
+  or edit in the Gamma editor). Canva CAN be edited in place but needs a Canva
+  Brand Kit for true on-brand auto-generation (none set up; values are in the
+  Style Bible). Gamma honours the Style Bible via the custom image style.
+
+## NEW workstream — Blender artist for the 3D tracks
+- Goal: hire a Blender artist to model the race tracks (Mountain, Sprint, arena).
+- Starter brief + new-session prompt: `docs/blender-artist-track-brief.md`.
+- Key constraints to carry: Rapier-friendly collision meshes, real-world scale,
+  z-monotonic courses (no closed loops yet), GLB export, Clean Futurism style.
+
 ## Carried-over context (from earlier this session)
 - Betting on marble races runs on **KOREX** (gambling entity) via a race-event API; paid race
   **entries** framed as a skill competition on the (non-gambling) Marbles side.
